@@ -1,10 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
+
+
 public class Collectable : MonoBehaviour
 {
+    [SerializeField] public ProductSo productData;
     private Collider _col;
     public Collider col => _col ??= GetComponent<Collider>();
+
+    public CollectableType _CollectableType => productData.collectableType;
 
     private Transform _mT;
     public Transform mT => _mT ??= transform;
@@ -17,11 +22,6 @@ public class Collectable : MonoBehaviour
     public Vector3 GetPose()
     {
         return transform.position;
-    }
-
-    public void SetStack(StackController stackController)
-    {
-        stackController.InsertStack(this);
     }
 
     public void SetPos(Socket socket)
@@ -39,17 +39,17 @@ public class Collectable : MonoBehaviour
     IEnumerator SetPosCr(Transform targetT, System.Action action = null)
     {
         float timer = 0;
-        float duration = .8f;
+        float duration = .2f;
         Vector3 cachedPos = mT.position;
         col.enabled = false;
         while (timer < duration)
         {
             timer += Time.deltaTime;
-            mT.position = Vector3.Lerp(cachedPos, cachedPos + Vector3.up * 8, timer / duration);
+            mT.position = Vector3.Lerp(cachedPos, cachedPos + Vector3.up, timer / duration);
             yield return null;
         }
         timer = 0;
-        duration = .4f;
+        duration = .2f;
         cachedPos = mT.position;
         Quaternion cachedRot = mT.rotation;
         while (timer < duration)

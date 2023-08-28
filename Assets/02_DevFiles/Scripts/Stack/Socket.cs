@@ -2,13 +2,30 @@ using UnityEngine;
 
 public class Socket : MonoBehaviour
 {
+    private Transform _transform;
+    public Transform _Transform
+    {
+        get => _transform;
+        set => _transform = value;
+    }
 
-    public Transform mT;
-    public Collectable stack;
+    public bool ChildIsEmpty
+    {
+        get
+        {
+            if (transform.childCount > 0)
+                return false;
+            return true;
+        }
+    }
+
+    public Collectable stack { get; set; }
 
     void Awake()
     {
-        mT = transform;
+        _transform = transform;
     }
+
+    
 
 }

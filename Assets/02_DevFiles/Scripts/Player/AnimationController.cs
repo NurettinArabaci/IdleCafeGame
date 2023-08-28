@@ -2,22 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationController : MonoBehaviour
+public class AnimationController : Cachable<AnimationController>
 {
 
-    [SerializeField] private Animator anim;
+    [SerializeField] private Animator animator;
 
-    private PlayerController playerController;
-
-    public void SetAnim()
+    public void SetFloatAnim(string animParam,float value)
     {
-
+        animator.SetFloat(animParam, value);
     }
-
-    public AnimationController Init(PlayerController _playerController)
+    public void SetAnimLayer()
     {
-        this.playerController = _playerController;
-        return this;
+       // animator.SetLayerWeight(animator.GetLayerIndex(""),)
     }
-
 }

@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SocketController : MonoBehaviour
+public class SocketController : Cachable<SocketController>
 {
     [SerializeField] private Vector3Int maxMatrisCounts;
     [SerializeField] protected Vector3 stackIntervalVector;
-    public Socket[,,] socketMatris;
-    PlayerController player;
+    [SerializeField] Vector3 initPose;
 
+    public Socket[,,] socketMatris;
+
+    public Collectable cachedLastCollectable;
+
+    
     void Awake()
     {
-        player = GetComponentInParent<PlayerController>();
         socketMatris = new Socket[maxMatrisCounts.x, maxMatrisCounts.y, maxMatrisCounts.z];
         for (int j = 0; j < maxMatrisCounts.y; j++)
         {
@@ -20,11 +23,10 @@ public class SocketController : MonoBehaviour
             {
                 for (int k = 0; k < maxMatrisCounts.z; k++)
                 {
-                    var obj = new GameObject("Socket-" + i + " , " + j + " , " + k);
-                    Socket socket = obj.AddComponent<Socket>();
+                    Socket socket = new GameObject("Socket-" + i + " , " + j + " , " + k).AddComponent<Socket>(); ;
                     socketMatris[i, j, k] = socket;
-                    socket.mT.SetParent(transform);
-                    socket.mT.localPosition = new Vector3(j * stackIntervalVector.x, i * stackIntervalVector.y, k * stackIntervalVector.z);
+                    socket._Transform.SetParent(transform);
+                    socket._Transform.localPosition = new Vector3(i * stackIntervalVector.x, j * stackIntervalVector.y, k * stackIntervalVector.z) + initPose;
                 }
             }
         }
@@ -35,15 +37,45 @@ public class SocketController : MonoBehaviour
     public void AddStack(Collectable collectable)
     {
         Vector3Int vector = GetAppropirateSocket();
+       
+        if (vector == -Vector3Int.one) return;
+        if (collectable == null) return;
+        collectable.col.enabled = false;
+        Socket socketHandler = socketMatris[vector.x, vector.y, vector.z];
+        collectable.SetPos(socketHandler);
+
+        socketHandler.stack = collectable;
+        cachedLastCollectable = collectable;
+    }
+
+    public void AddStackToInit(Collectable collectable)
+    {
+        Vector3Int vector = GetAppropirateSocket();
 
         if (vector == -Vector3Int.one) return;
         if (collectable == null) return;
         collectable.col.enabled = false;
         Socket socketHandler = socketMatris[vector.x, vector.y, vector.z];
+        collectable.mT.SetParent(socketHandler.transform);
+
         socketHandler.stack = collectable;
-        collectable.SetPos(socketHandler);
+        cachedLastCollectable = collectable;
     }
 
+    public bool SocketIsEmpty()
+    {
+        int counter = 0;
+        foreach (var item in GetComponentsInChildren<Socket>())
+        {
+            if (!item.ChildIsEmpty)
+                counter++;
+            
+        }
+        if (counter > 0)
+            return false;
+        
+        return true;
+    }
     
     public List<Socket> GetFillSockets()
     {

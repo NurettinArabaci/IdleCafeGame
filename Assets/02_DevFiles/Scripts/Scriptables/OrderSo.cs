@@ -6,7 +6,7 @@ using UnityEngine;
 public struct OrderStruct
 {
     public int productCount;
-    public ProductSo product;
+    public List<ProductSo> product;
 }
 [CreateAssetMenu(fileName = "Order", menuName = "ScriptableObjects/Order")]
 public class OrderSo : ScriptableObject

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : Cachable<PlayerMovement>
 {
     private Rigidbody _rb;
     public Rigidbody Rigidbody => _rb ??= GetComponent<Rigidbody>();
@@ -11,11 +11,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private JoystickController joystick;
     [SerializeField] private float speed = 1;
 
-    private void Awake()
-    {
-        _rb = GetComponent<Rigidbody>();
-
-    }
 
     private void FixedUpdate()
     {
@@ -23,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
 
         Rigidbody.velocity = DirectionPose() * speed;
         transform.rotation = RotationPose();
-        //PlayerController.SetFloat("MoveParam", Rigidbody.velocity.magnitude / speed);
+        playerController._AnimationController.SetFloatAnim("MoveParam", Rigidbody.velocity.magnitude / speed);
         CollectableEvents.Fire_OnMovementLerp();
     }
 
