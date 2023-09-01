@@ -1,8 +1,5 @@
 using System.Collections;
 using UnityEngine;
-
-
-
 public class Collectable : MonoBehaviour
 {
     [SerializeField] public ProductSo productData;
@@ -13,11 +10,6 @@ public class Collectable : MonoBehaviour
 
     private Transform _mT;
     public Transform mT => _mT ??= transform;
-
-    public void Collected()
-    {
-        CollectableEvents.Fire_OnCollectableWithStack(gameObject);
-    }
 
     public Vector3 GetPose()
     {

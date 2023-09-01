@@ -15,10 +15,12 @@ MonoBehaviour:
   orderStructs:
   - productCount: 2
     product:
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 11400000, guid: aa9ea6bd5dd59488bbfc7d57d7f2aeb8, type: 2}
+    - {fileID: 11400000, guid: 3f8f2ba4780724cdbacf7db7079565ff, type: 2}
   - productCount: 1
-    product: []
-  - productCount: 0
-    product: []
+    product:
+    - {fileID: 11400000, guid: aa9ea6bd5dd59488bbfc7d57d7f2aeb8, type: 2}
+  - productCount: 1
+    product:
+    - {fileID: 11400000, guid: 3f8f2ba4780724cdbacf7db7079565ff, type: 2}
   orderName: 

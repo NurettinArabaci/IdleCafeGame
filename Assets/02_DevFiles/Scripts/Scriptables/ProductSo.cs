@@ -4,9 +4,16 @@ using UnityEngine;
 
 public enum CollectableType
 {
+    None,
     RawProduct,
     PreaparedProduct,
     Plate
+}
+
+public enum ProductType
+{
+    Mushroom,
+    Onion
 }
 
 [CreateAssetMenu(fileName = "Product", menuName = "ScriptableObjects/Product")]
@@ -16,7 +23,7 @@ public class ProductSo : ScriptableObject
     [SerializeField] private Sprite productSprite;
     [SerializeField] private bool isLock;
 
-
+    public ProductType productType;
     public CollectableType collectableType;
     public string ProductName => productName;
     public Sprite ProductSprite => productSprite;
