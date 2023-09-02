@@ -12,6 +12,8 @@ public class Stackable : MonoBehaviour
 {
     public StackType stackType;
     public CollectableType collectableType;
+    public ProductType productType;
+    public System.Action<Stackable> OnHaveObject;
     public Socket[,,] socketMatris;
     [HideInInspector] public List<Socket> sockets = new List<Socket>();
     [SerializeField] private Vector3Int maxMatrisCounts = Vector3Int.one;
@@ -19,6 +21,7 @@ public class Stackable : MonoBehaviour
 
     [SerializeField] private Vector3 initPose = Vector3.up;
     [SerializeField] private Collectable collectable; // TODO: delete
+    
     private Coroutine _coroutine;
     private Stackable _tempStackable;
     private List<Socket> _tempSockets;
@@ -28,7 +31,6 @@ public class Stackable : MonoBehaviour
 
     protected Stackable myStackable;
     protected System.Action OnGetFromArea;
-    public System.Action<Stackable> OnHaveObject;
     public Stackable MyStackable 
     {
         get=> myStackable;
@@ -106,22 +108,25 @@ void InitSockets()
     
     public void StackObject(Stackable stackable)
     {
+        
         _tempStackable.ReShape();
-        stackable.OnGetFromArea?.Invoke();
+        if(!MyStackable.IsSocketsFull)
+            stackable.OnGetFromArea?.Invoke();
 
         for (int i = 0; i <= _tempSockets.Count - 1; i++)
         {
             
             if (_tempSockets[i].isEmpty)
             {
-                var _types =_tempSockets[i]._myStackable.collectableType;
-                if(_types!=CollectableType.None)
+                var _productType =_tempSockets[i]._myStackable.productType;
+                var _collectType =_tempSockets[i]._myStackable.collectableType;
+                if(_productType!=ProductType.None)
                 {
                     
-                    if(!_tempStackable.GetAvailableFilledSocket(_types)) return;
+                    if(!_tempStackable.GetAvailableFilledSocket(_productType,_collectType)) return;
                     
-                    _tempSockets[i].AddStack(_tempStackable.GetAvailableFilledSocket(_types).stack);
-                    _tempStackable.GetAvailableFilledSocket(_types).stack=null;
+                    _tempSockets[i].AddStack(_tempStackable.GetAvailableFilledSocket(_productType,_collectType).stack);
+                    _tempStackable.GetAvailableFilledSocket(_productType,_collectType).stack=null;
                     _tempSockets[i]._myStackable.OnHaveObject?.Invoke(_tempStackable);
                     
                     _tempStackable.ReShape();
@@ -185,7 +190,7 @@ void InitSockets()
         
     }
 
-    
+    private bool IsSocketsFull => sockets[sockets.Count-1]==GetLastFilledSocket();
     public virtual Socket GetLastFilledSocket()
     {
         for (int i = sockets.Count - 1; i >= 0; i--)
@@ -208,14 +213,15 @@ void InitSockets()
         return null;
     }
 
-    public virtual Socket GetAvailableFilledSocket(CollectableType _type)
+    public virtual Socket GetAvailableFilledSocket(ProductType _type,CollectableType _collectableType)
     {
         for (int i = sockets.Count - 1; i >= 0; i--)
         {
             if (sockets[i].isEmpty) continue;
             
             
-            if(sockets[i].stack._CollectableType!=_type) continue;
+            if(sockets[i].stack._ProductType!=_type) continue;
+            if(sockets[i].stack._CollectableType!=_collectableType) continue;
              
             return sockets[i];
         }

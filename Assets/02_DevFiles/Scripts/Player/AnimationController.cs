@@ -11,8 +11,8 @@ public class AnimationController : Cachable<AnimationController>
     {
         animator.SetFloat(animParam, value);
     }
-    public void SetAnimLayer()
+    public void SetAnimLayer(float weight)
     {
-       // animator.SetLayerWeight(animator.GetLayerIndex(""),)
+        animator.SetLayerWeight(animator.GetLayerIndex("FullBody"),weight);
     }
 }

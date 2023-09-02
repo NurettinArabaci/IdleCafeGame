@@ -12,8 +12,10 @@ public enum CollectableType
 
 public enum ProductType
 {
+    None,
     Mushroom,
-    Onion
+    Onion,
+    Plate
 }
 
 [CreateAssetMenu(fileName = "Product", menuName = "ScriptableObjects/Product")]
@@ -21,13 +23,14 @@ public class ProductSo : ScriptableObject
 {
     [SerializeField] private string productName;
     [SerializeField] private Sprite productSprite;
-    [SerializeField] private bool isLock;
-
+    [SerializeField] private GameObject prefab;
+    public bool isLock;
     public ProductType productType;
     public CollectableType collectableType;
     public string ProductName => productName;
     public Sprite ProductSprite => productSprite;
-    public bool IsLock => isLock;
+    public GameObject Prefab => prefab;
+    
 
 
 }

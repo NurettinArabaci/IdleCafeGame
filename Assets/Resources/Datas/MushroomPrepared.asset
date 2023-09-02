@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65b174292b9af47c38067397b61d114e, type: 3}
-  m_Name: Onion
+  m_Name: MushroomPrepared
   m_EditorClassIdentifier: 
   productName: 
   productSprite: {fileID: 0}
+  prefab: {fileID: 8729447191726954489, guid: 761bbdf30726047f99c30f70eba0e7e6, type: 3}
   isLock: 0
   productType: 1
-  collectableType: 1
+  collectableType: 2

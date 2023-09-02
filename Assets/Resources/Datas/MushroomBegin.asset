@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65b174292b9af47c38067397b61d114e, type: 3}
-  m_Name: Prepared
+  m_Name: MushroomBegin
   m_EditorClassIdentifier: 
   productName: 
   productSprite: {fileID: 0}
+  prefab: {fileID: 3230588003797949502, guid: a9ebfedd449a3487aaa16176c9df5e74, type: 3}
   isLock: 0
+  productType: 1
   collectableType: 1

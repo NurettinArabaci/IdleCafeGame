@@ -131,7 +131,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48286f7af41be43f78dc7f1614556467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  productData: {fileID: 11400000, guid: 3f8f2ba4780724cdbacf7db7079565ff, type: 2}
+  beginProductData: {fileID: 11400000, guid: 9f426e6b41a1c480db87ce158efc719c, type: 2}
+  preparedProductData: {fileID: 11400000, guid: 3f8f2ba4780724cdbacf7db7079565ff,
+    type: 2}
+  _collectableType: 0
 --- !u!33 &6845689049375963274
 MeshFilter:
   m_ObjectHideFlags: 0

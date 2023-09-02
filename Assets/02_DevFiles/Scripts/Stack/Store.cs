@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rubbish : Stackable
+public class Store : Stackable
 {
     private Animator anim;
     private Animator Anim => anim ??= GetComponentInChildren<Animator>();
@@ -11,7 +11,7 @@ public class Rubbish : Stackable
     {
         OnGetFromArea+=OnPlayAnimation;
     }
-    
+
     public void OnPlayAnimation()
     {
         Anim.SetTrigger("OpenCover");
@@ -21,4 +21,5 @@ public class Rubbish : Stackable
     {
         OnGetFromArea-=OnPlayAnimation;
     }
+
 }

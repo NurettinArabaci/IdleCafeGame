@@ -6,9 +6,21 @@ public class CuttingBoard : Stackable
 {
 
     
-    [SerializeField] Stackable inputs, outputs;
+    [SerializeField] private Stackable inputs, outputs;
+
+    private Animator _animator;
     
-    
+    private WaitUntil waitInput, waitEmptySocket, waitFillSocket;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+         _animator = GetComponentInChildren<Animator>();
+        waitInput = new WaitUntil( () => inputs.GetLastFilledSocket());
+        waitEmptySocket = new WaitUntil( () => GetLastEmptySocket());
+        waitFillSocket= new WaitUntil( () => GetLastFilledSocket());
+    }
     private void Start()
     {
         StartCoroutine(CutCr());
@@ -16,15 +28,16 @@ public class CuttingBoard : Stackable
 
     IEnumerator CutCr()
     {
-        yield return new WaitUntil(()=>inputs.GetLastFilledSocket());
+        yield return waitInput;
 
-        yield return new WaitUntil(()=>GetLastEmptySocket());
+        yield return waitEmptySocket;
         inputs.GetLastFilledSocket().MoveStack(GetLastEmptySocket());
-            
 
-        yield return new WaitUntil(()=>GetLastFilledSocket());
-        yield return new WaitForSeconds(3);
-        
+        yield return waitFillSocket;
+        _animator.SetTrigger("Cut");
+
+        yield return new WaitForSeconds(2);
+        GetLastFilledSocket().stack.ChangeToPrepared();
         GetLastFilledSocket().MoveStack(outputs.GetLastEmptySocket());
 
         StartCoroutine(CutCr());

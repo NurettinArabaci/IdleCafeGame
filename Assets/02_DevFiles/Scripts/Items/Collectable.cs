@@ -2,62 +2,42 @@ using System.Collections;
 using UnityEngine;
 public class Collectable : MonoBehaviour
 {
-    [SerializeField] public ProductSo productData;
-    private Collider _col;
-    public Collider col => _col ??= GetComponent<Collider>();
+    public ProductSo productData{get; private set;}
+    [SerializeField] private ProductSo beginProductData,preparedProductData;
 
-    public CollectableType _CollectableType => productData.collectableType;
+    public CollectableType _CollectableType =>  productData.collectableType;
+    public ProductType _ProductType =>  productData.productType;
 
-    private Transform _mT;
-    public Transform mT => _mT ??= transform;
-
-    public Vector3 GetPose()
+    void Awake()
     {
-        return transform.position;
+        productData = beginProductData;
     }
 
-    public void SetPos(Socket socket)
+
+
+    public void ChangeToPrepared()
     {
-        if (PosCR != null)
-            StopCoroutine(PosCR);
-        PosCR = null;
-
-        PosCR = StartCoroutine(SetPosCr(socket.transform));
-
+        productData = preparedProductData;
+        ChangeChildObj();
     }
 
-    Coroutine PosCR;
-
-    IEnumerator SetPosCr(Transform targetT, System.Action action = null)
+    private void ChangeChildObj()
     {
-        float timer = 0;
-        float duration = .2f;
-        Vector3 cachedPos = mT.position;
-        col.enabled = false;
-        while (timer < duration)
+        var _childCount= transform.childCount;
+        if(_childCount>0)
         {
-            timer += Time.deltaTime;
-            mT.position = Vector3.Lerp(cachedPos, cachedPos + Vector3.up, timer / duration);
-            yield return null;
-        }
-        timer = 0;
-        duration = .2f;
-        cachedPos = mT.position;
-        Quaternion cachedRot = mT.rotation;
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-            mT.position = Vector3.Lerp(cachedPos, targetT.position, timer / duration);
-            mT.rotation = Quaternion.Lerp(cachedRot, targetT.rotation, timer / duration);
+            for (int i = 0; i < _childCount; i++)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+            
+        }  
+        Instantiate(productData.Prefab,transform.position,Quaternion.identity,transform);
+    }
 
-            yield return null;
-        }
-
-        mT.SetParent(targetT);
-        mT.localPosition = Vector3.zero;
-        mT.localRotation = Quaternion.Euler(Vector3.zero);
-        yield return new WaitForSeconds(1);
-
-        action?.Invoke();
+    public void ChangeToBegin()
+    {
+        productData = beginProductData;
+        ChangeChildObj();
     }
 }

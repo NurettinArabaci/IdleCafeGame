@@ -27,7 +27,7 @@ public class Socket : MonoBehaviour
     {
         stack = collectable;
         collectable.transform.SetParent(this.transform);
-        collectable.transform.DOLocalJump(Vector3.zero, 0.3f, 1, 0.2f);
+        collectable.transform.DOLocalJump(Vector3.zero, 0.6f, 1, 0.3f);
 
     }
 
