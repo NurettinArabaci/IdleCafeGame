@@ -1127,16 +1127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb2236045374349948cbb0ba56f4d221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackType: 1
-  collectableType: 2
-  productType: 1
-  sockets: []
-  maxMatrisCounts: {x: 1, y: 1, z: 1}
-  stackIntervalVector: {x: 0, y: 1, z: 0}
-  initPose: {x: 0, y: 1, z: 1}
-  collectable: {fileID: 0}
-  order: {fileID: 11400000, guid: 7f38e9074a4dc4724b4ee4d7eb56051b, type: 2}
-  target: {fileID: 0}
 --- !u!195 &6065787375676066320
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1147,7 +1137,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 8
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

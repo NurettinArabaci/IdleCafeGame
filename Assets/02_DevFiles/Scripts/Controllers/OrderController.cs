@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
 
 public class OrderController : MonoSingleton<OrderController>
@@ -18,7 +18,13 @@ public class OrderController : MonoSingleton<OrderController>
     private void Start()
     {
         SpawnCustomer();
-        customers[0].SetDestination(RandomEmptyArea().transform);
+        
+    }
+
+    void Update() // TODO: Delete Update *********************************************************!!!!!!!!
+    {
+        if(Input.GetKeyDown(KeyCode.A))
+            SelectCustomer();
     }
     public void AddListEmptyArea(SitArea addArea)
     {
@@ -56,7 +62,14 @@ public class OrderController : MonoSingleton<OrderController>
         }
     }
 
-    
+    public void SelectCustomer()
+    {
+        if(customers.Count<=0 || sitAreas.Count<=0) return;
+
+        customers.Last().SetSitArea(RandomEmptyArea());
+        customers.Remove(customers.Last());
+
+    }
 
 
     

@@ -11,8 +11,8 @@ public enum StackType
 public class Stackable : MonoBehaviour
 {
     public StackType stackType;
-    public CollectableType collectableType;
     public ProductType productType;
+    public CollectableType collectableType;
     public System.Action<Stackable> OnHaveObject;
     public Socket[,,] socketMatris;
     [HideInInspector] public List<Socket> sockets = new List<Socket>();
@@ -20,17 +20,15 @@ public class Stackable : MonoBehaviour
     [SerializeField] private Vector3 stackIntervalVector = Vector3.up;
 
     [SerializeField] private Vector3 initPose = Vector3.up;
-    [SerializeField] private Collectable collectable; // TODO: delete
+    [SerializeField] private Collectable collectable; // TODO: delete then objectPooling
     
     private Coroutine _coroutine;
     private Stackable _tempStackable;
     private List<Socket> _tempSockets;
 
 
-
-
-    protected Stackable myStackable;
     protected System.Action OnGetFromArea;
+    protected Stackable myStackable;
     public Stackable MyStackable 
     {
         get=> myStackable;
@@ -38,31 +36,31 @@ public class Stackable : MonoBehaviour
     }
 
 
-protected virtual void Awake()
-{
-    InitSockets();
-    myStackable=this;
-
-}
-void InitSockets()
-{
-    socketMatris = new Socket[maxMatrisCounts.x, maxMatrisCounts.y, maxMatrisCounts.z];
-    for (int j = 0; j < maxMatrisCounts.y; j++)
+    protected virtual void Awake()
     {
-        for (int i = 0; i < maxMatrisCounts.x; i++)
+        InitSockets();
+        myStackable=this;
+
+    }
+    private void InitSockets()
+    {
+        socketMatris = new Socket[maxMatrisCounts.x, maxMatrisCounts.y, maxMatrisCounts.z];
+        for (int j = 0; j < maxMatrisCounts.y; j++)
         {
-            for (int k = 0; k < maxMatrisCounts.z; k++)
+            for (int i = 0; i < maxMatrisCounts.x; i++)
             {
-                    Socket _stackable = new GameObject($"Socket-{i},{j},{k}").AddComponent<Socket>();
-                    _stackable.Init(this);
-                    socketMatris[i, j, k] = _stackable;
-                    _stackable.transform.SetParent(transform);
-                    _stackable.transform.localPosition = new Vector3(i * stackIntervalVector.x, j * stackIntervalVector.y, k * stackIntervalVector.z) + initPose;
-                    sockets.Add(_stackable);
+                for (int k = 0; k < maxMatrisCounts.z; k++)
+                {
+                        Socket _stackable = new GameObject($"Socket-{i},{j},{k}").AddComponent<Socket>();
+                        _stackable.Init(this);
+                        socketMatris[i, j, k] = _stackable;
+                        _stackable.transform.SetParent(transform);
+                        _stackable.transform.localPosition = new Vector3(i * stackIntervalVector.x, j * stackIntervalVector.y, k * stackIntervalVector.z) + initPose;
+                        sockets.Add(_stackable);
+                }
             }
-        }
-    }   
-}
+        }   
+    }
     private void Start()
     {
         
@@ -96,48 +94,54 @@ void InitSockets()
     {
         if(stackable.stackType==StackType.Output)
         {
+            if(!MyStackable.IsSocketsFull)
+            {
+                stackable.OnGetFromArea?.Invoke();
+            }
+
             GettingArea(stackable);
             
         }
         if(stackable.stackType==StackType.Input)
         {
+            if(MyStackable.GetLastFilledSocket())
+            {
+                stackable.OnGetFromArea?.Invoke();
+            }
             DeliverArea(stackable);
         }
         
     }
     
-    public void StackObject(Stackable stackable)
+    public void StackObject()
     {
         
         _tempStackable.ReShape();
-        if(!MyStackable.IsSocketsFull)
-            stackable.OnGetFromArea?.Invoke();
 
         for (int i = 0; i <= _tempSockets.Count - 1; i++)
-        {
-            
+        {            
             if (_tempSockets[i].isEmpty)
             {
-                var _productType =_tempSockets[i]._myStackable.productType;
+                
                 var _collectType =_tempSockets[i]._myStackable.collectableType;
-                if(_productType!=ProductType.None)
-                {
-                    
-                    if(!_tempStackable.GetAvailableFilledSocket(_productType,_collectType)) return;
-                    
-                    _tempSockets[i].AddStack(_tempStackable.GetAvailableFilledSocket(_productType,_collectType).stack);
-                    _tempStackable.GetAvailableFilledSocket(_productType,_collectType).stack=null;
-                    _tempSockets[i]._myStackable.OnHaveObject?.Invoke(_tempStackable);
-                    
+                var _productType =_tempSockets[i]._myStackable.productType;
+                
+                if(_productType==ProductType.None) return;
+                
+                if(_productType!=ProductType.All)
+                {                   
+                    if(!_tempStackable.GetAvailableFilledSocket(_collectType,_productType)) return;
+                   
+                    _tempSockets[i].AddStack(_tempStackable.GetAvailableFilledSocket(_collectType,_productType).stack);
+                    _tempStackable.GetAvailableFilledSocket(_collectType,_productType).stack=null;
+                    _tempSockets[i]._myStackable.OnHaveObject?.Invoke(_tempStackable);                   
                     _tempStackable.ReShape();
                     return;
                 }
 
                 if(!_tempStackable.GetLastFilledSocket()) return;
                 _tempSockets[i].AddStack(_tempStackable.GetLastFilledSocket().stack);
-                _tempStackable.GetLastFilledSocket().stack = null;
-                
-
+                _tempStackable.GetLastFilledSocket().stack = null;            
                 return;
 
             }
@@ -148,16 +152,14 @@ void InitSockets()
     {
         _tempStackable=this;
         _tempSockets=stackable.sockets;
-        StackObject(stackable);
-        
+        StackObject();
 
     }
     public void GettingArea(Stackable stackable)
     {
         _tempStackable = stackable;
         _tempSockets = sockets;
-        StackObject(stackable);
-
+        StackObject();
     }
     
     
@@ -170,7 +172,6 @@ void InitSockets()
     public virtual void StopProcess()
     {
         if(_coroutine==null) return;
-
         StopCoroutine(_coroutine);
     }
     
@@ -212,16 +213,28 @@ void InitSockets()
         }
         return null;
     }
+    public virtual Socket GetAvailableFilledSocket(CollectableType _collectableType)
+    {
+        for (int i = sockets.Count - 1; i >= 0; i--)
+        {
+            if (sockets[i].isEmpty) continue;
+            
+            if(sockets[i].stack._CollectableType !=_collectableType) continue;
+             
+            return sockets[i];
+        }
+        return null;
+    }
 
-    public virtual Socket GetAvailableFilledSocket(ProductType _type,CollectableType _collectableType)
+    public virtual Socket GetAvailableFilledSocket(CollectableType _collectableType,ProductType _productType)
     {
         for (int i = sockets.Count - 1; i >= 0; i--)
         {
             if (sockets[i].isEmpty) continue;
             
             
-            if(sockets[i].stack._ProductType!=_type) continue;
-            if(sockets[i].stack._CollectableType!=_collectableType) continue;
+            if(sockets[i].stack._ProductType !=_productType) continue;
+            if(sockets[i].stack._CollectableType !=_collectableType) continue;
              
             return sockets[i];
         }

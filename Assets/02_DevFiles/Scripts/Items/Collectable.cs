@@ -3,10 +3,10 @@ using UnityEngine;
 public class Collectable : MonoBehaviour
 {
     public ProductSo productData{get; private set;}
-    [SerializeField] private ProductSo beginProductData,preparedProductData;
+    [SerializeField] private ProductSo beginProductData,preparedProductData,mergedData;
 
-    public CollectableType _CollectableType =>  productData.collectableType;
     public ProductType _ProductType =>  productData.productType;
+    public CollectableType _CollectableType =>  productData.collectableType;
 
     void Awake()
     {
@@ -14,10 +14,23 @@ public class Collectable : MonoBehaviour
     }
 
 
-
-    public void ChangeToPrepared()
+    public void ChangeToData(ProductType type)
     {
-        productData = preparedProductData;
+        switch (type)
+        {
+            case ProductType.RawProduct:
+                productData = beginProductData;
+                break;
+            
+            case ProductType.PreaparedProduct:
+                productData = preparedProductData;  
+                break;
+        }
+        ChangeChildObj();
+    }
+    public void ChangeToMerge()
+    {
+        productData = mergedData;
         ChangeChildObj();
     }
 
@@ -35,9 +48,4 @@ public class Collectable : MonoBehaviour
         Instantiate(productData.Prefab,transform.position,Quaternion.identity,transform);
     }
 
-    public void ChangeToBegin()
-    {
-        productData = beginProductData;
-        ChangeChildObj();
-    }
 }

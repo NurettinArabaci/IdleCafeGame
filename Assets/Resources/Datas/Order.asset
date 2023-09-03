@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Order
   m_EditorClassIdentifier: 
   orderStructs:
-  - productCount: 2
+  - productSprite: {fileID: 24184061, guid: e845558fce7a94b90a9f48572f39e075, type: 3}
     product:
     - {fileID: 11400000, guid: aa9ea6bd5dd59488bbfc7d57d7f2aeb8, type: 2}
     - {fileID: 11400000, guid: 3f8f2ba4780724cdbacf7db7079565ff, type: 2}
-  - productCount: 1
+  - productSprite: {fileID: 1843624095, guid: e845558fce7a94b90a9f48572f39e075, type: 3}
     product:
     - {fileID: 11400000, guid: aa9ea6bd5dd59488bbfc7d57d7f2aeb8, type: 2}
-  - productCount: 1
+  - productSprite: {fileID: 1582336154, guid: e845558fce7a94b90a9f48572f39e075, type: 3}
     product:
     - {fileID: 11400000, guid: 3f8f2ba4780724cdbacf7db7079565ff, type: 2}
   orderName: 

@@ -5,7 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public struct OrderStruct
 {
-    public int productCount;
+    [SerializeField] private Sprite productSprite;
+    public Sprite ProductSprite => productSprite;
     public List<ProductSo> product;
 }
 [CreateAssetMenu(fileName = "Order", menuName = "ScriptableObjects/Order")]

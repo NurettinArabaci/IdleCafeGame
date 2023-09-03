@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerStackable : Stackable
@@ -10,7 +8,7 @@ public class PlayerStackable : Stackable
     public PlayerStackable Init(PlayerController _playerController)
     {
         this.playerController = _playerController;
-        return this as PlayerStackable;
+        return this;
         
     }
 

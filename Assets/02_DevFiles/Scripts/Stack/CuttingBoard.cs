@@ -37,7 +37,7 @@ public class CuttingBoard : Stackable
         _animator.SetTrigger("Cut");
 
         yield return new WaitForSeconds(2);
-        GetLastFilledSocket().stack.ChangeToPrepared();
+        GetLastFilledSocket().stack.ChangeToData(ProductType.PreaparedProduct);
         GetLastFilledSocket().MoveStack(outputs.GetLastEmptySocket());
 
         StartCoroutine(CutCr());

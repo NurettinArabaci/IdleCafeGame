@@ -16,5 +16,5 @@ MonoBehaviour:
   productSprite: {fileID: 0}
   prefab: {fileID: 7107593667324286450, guid: 660df5b9d60c743a49ac2ba1f83c6f74, type: 3}
   isLock: 0
-  productType: 2
-  collectableType: 1
+  collectableType: 2
+  productType: 1
