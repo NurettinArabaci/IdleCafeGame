@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: MushroomPrepared
   m_EditorClassIdentifier: 
   productName: 
-  productSprite: {fileID: 0}
   prefab: {fileID: 8729447191726954489, guid: 761bbdf30726047f99c30f70eba0e7e6, type: 3}
   isLock: 0
   collectableType: 1

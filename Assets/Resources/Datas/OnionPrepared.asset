@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: OnionPrepared
   m_EditorClassIdentifier: 
   productName: 
-  productSprite: {fileID: 0}
   prefab: {fileID: 2367694070882566947, guid: a185fd22f15f846698c94aa49d652a9e, type: 3}
-  isLock: 0
-  productType: 2
+  isLock: 1
   collectableType: 2
+  productType: 2
